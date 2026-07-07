@@ -40,7 +40,11 @@ module.exports = {
         time: 300_000
       });
 
-      const message = submitted.fields.getTextInputValue('message_input');
+      // CRLF → LF 통일, 앞뒤 공백 제거
+      const message = submitted.fields.getTextInputValue('message_input')
+        .replace(/\r\n/g, '\n')
+        .replace(/\r/g, '\n')
+        .trimEnd();
 
       const freshData = loadData(guildId);
       freshData.message = message;
