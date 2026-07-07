@@ -54,6 +54,7 @@ async function sendToWebhooks(guildId) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: data.botName || '파트너봇',
+          ...(data.avatarUrl ? { avatar_url: data.avatarUrl } : {}),
           content: data.message
         })
       });

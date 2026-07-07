@@ -7,13 +7,20 @@ module.exports = {
     .addStringOption(option =>
       option
         .setName('봇이름')
-        .setDescription('웹훅 메시지에 표시될 봇 이름 (기본값: 파트너봇)')
+        .setDescription('웹훅 메시지에 표시될 이름 (사람 이름 입력 시 일반 유저처럼 보임)')
         .setRequired(false)
         .setMaxLength(80)
+    )
+    .addStringOption(option =>
+      option
+        .setName('아바타')
+        .setDescription('표시될 프로필 사진 URL (디스코드 아바타 URL 입력 시 그 사람처럼 보임)')
+        .setRequired(false)
     ),
 
   async execute(interaction, { loadData, saveData, startInterval, sendToWebhooks }) {
     const botName = interaction.options.getString('봇이름');
+    const avatarUrl = interaction.options.getString('아바타');
     const guildId = interaction.guildId;
 
     const data = loadData(guildId);
@@ -31,10 +38,9 @@ module.exports = {
       });
     }
 
-    // 봇 이름 업데이트
-    if (botName) {
-      data.botName = botName;
-    }
+    // 이름 / 아바타 업데이트
+    if (botName) data.botName = botName;
+    if (avatarUrl) data.avatarUrl = avatarUrl;
 
     data.active = true;
     saveData(guildId, data);
@@ -63,7 +69,8 @@ module.exports = {
       content: [
         `🚀 자동 메시지 발송이 시작되었습니다!`,
         ``,
-        `🤖 봇 이름: **${data.botName}**`,
+        `👤 표시 이름: **${data.botName}**`,
+        `🖼️ 아바타: **${data.avatarUrl ? '설정됨' : '기본값'}**`,
         `🔗 등록된 웹훅: **${data.webhooks.length}개**`,
         `⏱️ 발송 주기: **${display}에 1번**`,
         `📝 메시지: \`${data.message.slice(0, 50)}${data.message.length > 50 ? '...' : ''}\``,
