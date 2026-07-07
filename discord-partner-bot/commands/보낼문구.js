@@ -13,7 +13,9 @@ module.exports = {
     ),
 
   async execute(interaction, { loadData, saveData }) {
-    const message = interaction.options.getString('메시지');
+    const raw = interaction.options.getString('메시지');
+    // \n 을 실제 줄바꿈으로 변환 (슬래시 커맨드에서 Enter 불가 문제 해결)
+    const message = raw.replace(/\\n/g, '\n');
     const guildId = interaction.guildId;
 
     const data = loadData(guildId);
